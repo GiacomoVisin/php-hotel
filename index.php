@@ -26,13 +26,13 @@ Se non viene specificato nessun filtro, visualizzare come in precedenza tutti gl
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>php-hotel</title>
-     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="index.css">
 </head>
 
 <body>
 
     <?php
-
 
     $hotels = [
 
@@ -74,42 +74,56 @@ Se non viene specificato nessun filtro, visualizzare come in precedenza tutti gl
 
     ];
 
-    ?>
+    
+    $filtered_hotels = [];
 
-
-    <h1> PHP-HOTELS </h1>
-
-
-    <table class="table table-bordered text-center mt-3">
-        <tr>
-            <th> NAME </th>
-            <th> DESCRIPTION </th>
-            <th> PARKING </th>
-            <th> VOTE </th>
-            <th> DISTANCE TO CENTER </th>
-        </tr>
-        <?php foreach ($hotels as $hotel) : ?>
-        <tr>
-            <td> <?php echo $hotel['name']; ?> </td>
-            <td> <?php echo $hotel['description']; ?> </td>
-            <td> <?php echo $hotel['parking'] ? 'Yes' : 'No'; ?> </td>
-            <td> <?php echo $hotel['vote']; ?> </td>
-            <td> <?php echo $hotel['distance_to_center']; ?> </td>
-        </tr>
-        <?php endforeach; ?>
-        
-    </table>
-
-    <?php
-
-
-
+    if (isset($_GET['parking'])) {
+        foreach ($hotels as $hotel) {
+            if ($hotel['parking'] === true) {
+                $filtered_hotels[] = $hotel;
+            }
+        }
+    } else {
+        $filtered_hotels = $hotels;
+    }
 
     ?>
 
+    <h1 class="text-center"> PHP-HOTELS </h1>
 
+    <hr>
+    <br>
 
+    <div class="container">
 
+        <form action="" method="GET" class="mb-4">
+            <input type="checkbox" name="parking" id="parking" <?php echo isset($_GET['parking']) ? 'checked' : ''; ?>>
+            <label for="parking">Only Parking Available</label>
+            <button type="submit" class="btn btn-primary btn-sm ml-2">Filtra</button>
+            <a href="index.php" class="btn btn-secondary btn-sm ml-1">Reset</a>
+        </form>
+
+        <table class="table table-bordered text-center mt-3">
+            <tr class="table-dark text-dark">
+                <th> NAME </th>
+                <th> DESCRIPTION </th>
+                <th> PARKING </th>
+                <th> VOTE </th>
+                <th> DISTANCE TO CENTER </th>
+            </tr>
+            <?php foreach ($filtered_hotels as $hotel): ?>
+                <tr>
+                    <td> <?php echo $hotel['name']; ?> </td>
+                    <td> <?php echo $hotel['description']; ?> </td>
+                    <td> <?php echo $hotel['parking'] ? "<div class='btn btn-success'>Available</div>" : "<div class='btn btn-danger'>Not available</div>"; ?> </td>
+                    <td> <?php echo $hotel['vote']; ?> </td>
+                    <td> <?php echo $hotel['distance_to_center'] . " KM" ?> </td>
+                </tr>
+            <?php endforeach; ?>
+
+        </table>
+
+    </div>
 
 </body>
 
